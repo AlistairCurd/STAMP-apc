@@ -30,10 +30,10 @@ def train(
     targets: Tuple[SKLearnEncoder, np.ndarray],
     add_features: Iterable[Tuple[SKLearnEncoder, Sequence[Any]]] = [],
     valid_idxs: np.ndarray,
-    n_epoch: int = 32,
-    patience: int = 8,
+    n_epoch: int = 1000,
+    patience: int = 16,
     path: Optional[Path] = None,
-    batch_size: int = 64,
+    batch_size: int = 16,
     cores: int = 8,
     plot: bool = False
 ) -> Learner:
@@ -116,7 +116,9 @@ def train(
 
     cbs = [
         SaveModelCallback(monitor='valid_loss', fname=f'best_valid'),
-        EarlyStoppingCallback(monitor='valid_loss', patience=patience),
+        EarlyStoppingCallback(monitor='valid_loss',
+                              patience=patience
+                              ),
         CSVLogger(),
         # MixedPrecision(amp_mode=AMPMode.BF16)
     ]
